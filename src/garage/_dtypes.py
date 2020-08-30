@@ -399,7 +399,15 @@ class EpisodeBatch(
                 this data was sampled.
             paths (list[dict[str, np.ndarray or dict[str, np.ndarray]]]): Keys:
                 *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
+<<<<<<< HEAD
                     non-flattened `episode_info` arrays, each of shape (T, S^*).
+=======
+<<<<<<< HEAD
+                    non-flattened `episode_info` arrays.
+=======
+                    non-flattened `episode_info` arrays, each of shape (T, S^*).
+>>>>>>> 3832d44... update episode_info shape in docs
+>>>>>>> a1addcc... episode_info added to TimeStep
                 * observations (np.ndarray): Non-flattened array of
                     observations. Typically has shape (T, S^*) (the unflattened
                     state space of the current environment). observations[i]
@@ -425,6 +433,14 @@ class EpisodeBatch(
                 * step_types (numpy.ndarray): A numpy array of `StepType with
                     shape (T,) containing the time step types for all
                     transitions in this batch.
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+                *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
+                    non-flattened `episode_info` arrays.
+>>>>>>> 679bf7d... update algos and samplers
+>>>>>>> a1addcc... episode_info added to TimeStep
         """
         lengths = np.asarray([len(p['rewards']) for p in paths])
         if all(

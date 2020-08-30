@@ -752,6 +752,7 @@ def test_to_time_step_list_batch(batch_data):
             assert key in batch_data['episode_infos']
             assert np.array_equal(batch['episode_infos'][key],
                                   [batch_data['episode_infos'][key][i]])
+<<<<<<< HEAD
 
 def test_terminals(batch_data):
     s = TimeStepBatch(
@@ -766,6 +767,8 @@ def test_terminals(batch_data):
         episode_infos=batch_data['episode_infos'],
     )
     assert s.terminals.shape == s.rewards.shape
+=======
+>>>>>>> a1addcc... episode_info added to TimeStep
 
 
 def test_from_empty_time_step_list_batch(batch_data):

@@ -166,11 +166,15 @@ class NPO(RLAlgorithm):
         """Obtain samplers and start actual training for each epoch.
 
         Args:
+<<<<<<< HEAD
 <<<<<<< 9c9c704d353b943e92a3e799258efdb0c2b32689
             trainer (Trainer): Experiment trainer, which provides services
 =======
             runner (LocalRunner): Experiment runner, which provides services
 >>>>>>> episode_info added to TimeStep
+=======
+            runner (LocalRunner): Experiment runner, which provides services
+>>>>>>> a1addcc... episode_info added to TimeStep
                 such as snapshotting and sampler control.
 
         Returns:
