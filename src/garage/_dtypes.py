@@ -83,6 +83,8 @@ class EpisodeBatch(
         lengths (numpy.ndarray): An integer numpy array of shape :math:`(N,)`
             containing the length of each episode in this batch. This may be
             used to reconstruct the individual episodes.
+        episode_infos (numpy.ndarray): A numpy array containing the episode-level 
+            information of each episode.
 
     Raises:
         ValueError: If any of the above attributes do not conform to their
@@ -283,7 +285,6 @@ class EpisodeBatch(
             k: np.concatenate([b.agent_infos[k] for b in batches])
             for k in batches[0].agent_infos.keys()
         }
-
         return cls(
             episode_infos=episode_infos,
             env_spec=batches[0].env_spec,
@@ -328,7 +329,6 @@ class EpisodeBatch(
                                lengths=np.asarray([length]))
             episodes.append(eps)
             start = stop
-
         return episodes
 
     def to_list(self):
@@ -362,6 +362,7 @@ class EpisodeBatch(
 
         """
         start = 0
+        # TODO: add episode_infos
         episodes = []
         for i, length in enumerate(self.lengths):
             stop = start + length
@@ -725,6 +726,8 @@ class TimeStep(
         step_type (StepType): a :class:`~StepType` enum value. Can be one of
             :attribute:`~StepType.FIRST`, :attribute:`~StepType.MID`,
             :attribute:`~StepType.TERMINAL`, or :attribute:`~StepType.TIMEOUT`.
+        episode_info (dict): A dict of episode-level information.
+            It contains information of the entire episode.
 
     """
 
@@ -852,6 +855,10 @@ class TimeStepBatch(
         step_types (numpy.ndarray): A numpy array of `StepType with shape (
             batch_size,) containing the time step types for all transitions in
             this batch.
+        episode_info (dict): A dict of episode-level information.
+            It contains information of the entire episode， which could be
+            needed to determine the first action (e.g. in the case of
+            goal-conditioned or MTRL.)
 
     Raises:
         ValueError: If any of the above attributes do not conform to their
@@ -862,7 +869,7 @@ class TimeStepBatch(
 
     def __new__(cls, episode_infos, env_spec, observations, actions, rewards,
                 next_observations, env_infos, agent_infos,
-                step_types):  # noqa: D102
+                step_types, episode_infos):  # noqa: D102
         # pylint: disable=missing-return-doc, missing-return-type-doc,
         # pylint: disable=too-many-branches
 
@@ -996,6 +1003,21 @@ class TimeStepBatch(
                     'dimension of '
                     'length {}, but got key {} with batch size {} instead.'.
                     format(inferred_batch_size, key, val.shape[0]))
+        
+        # TODO: figure out if episode_info is batch or not
+        # episode_info
+        for key, val in episode_infos.items():
+            if (isinstance(val, dict)):
+                raise ValueError(
+                    'Each entry in episode_infos must have a batch '
+                    'dimension of '
+                    'length {}, but got key {} with batch size {} instead.'.
+                    format(inferred_batch_size, key, val.shape[0]))
+        # if not isinstance(episode_info, dict):
+        #     raise ValueError(
+        #         'episode_info must be a numpy array or dictionary, 
+        #         'but got value with type {} instead.'
+        #         'instead'.format((type(episode_info))))
 
         # episode_infos
         for key, val in episode_infos.items():
@@ -1017,6 +1039,7 @@ class TimeStepBatch(
                                observations, actions, rewards,
                                next_observations, env_infos, agent_infos,
                                step_types)
+
 
     @classmethod
     def concatenate(cls, *batches):
@@ -1092,7 +1115,8 @@ class TimeStepBatch(
                     k: np.asarray([v[i]])
                     for (k, v) in self.agent_infos.items()
                 },
-                step_types=np.asarray([self.step_types[i]], dtype=StepType))
+                step_types=np.asarray([self.step_types[i]], dtype=StepType)
+            )
             time_steps.append(time_step)
         return time_steps
 
