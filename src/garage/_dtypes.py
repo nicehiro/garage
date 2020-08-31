@@ -878,7 +878,7 @@ class TimeStepBatch(
 
     def __new__(cls, episode_infos, env_spec, observations, actions, rewards,
                 next_observations, env_infos, agent_infos,
-                step_types, episode_infos):  # noqa: D102
+                step_types):  # noqa: D102
         # pylint: disable=missing-return-doc, missing-return-type-doc,
         # pylint: disable=too-many-branches
 
