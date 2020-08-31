@@ -22,6 +22,7 @@ class EpisodeBatch(
             'agent_infos',
             'step_types',
             'lengths',
+            'episode_infos',
         ])):
     # pylint: disable=missing-return-doc, missing-return-type-doc, missing-param-doc, missing-type-doc  # noqa: E501
     r"""A tuple representing a batch of whole episodes.
@@ -72,7 +73,8 @@ class EpisodeBatch(
             in this batch.
         env_infos (dict[str, np.ndarray]): A dict of numpy arrays arbitrary
             environment state information. Each value of this dict should be
-            a numpy array of shape :math:`(N \bullet [T])` or :math:`(N \bullet [T], S^*)`.
+            a numpy array of shape :math:`(N \bullet [T])` or 
+            :math:`(N \bullet [T], S^*)`.
         agent_infos (dict[str, np.ndarray]): A dict of numpy arrays arbitrary agent
             state information. Each value of this dict should be a numpy array
             of shape :math:`(N \bullet [T])` or :math:`(N \bullet [T], S^*)`.
@@ -83,7 +85,7 @@ class EpisodeBatch(
         lengths (numpy.ndarray): An integer numpy array of shape :math:`(N,)`
             containing the length of each episode in this batch. This may be
             used to reconstruct the individual episodes.
-        episode_infos (numpy.ndarray): A numpy array containing the episode-level 
+        episode_infos (dict): A dict of numpy arrays containing the episode-level
             information of each episode.
 
     Raises:
@@ -362,7 +364,6 @@ class EpisodeBatch(
 
         """
         start = 0
-        # TODO: add episode_infos
         episodes = []
         for i, length in enumerate(self.lengths):
             stop = start + length
@@ -386,7 +387,10 @@ class EpisodeBatch(
                 {k: v[start:stop]
                  for (k, v) in self.agent_infos.items()},
                 'step_types':
-                self.step_types[start:stop]
+                self.step_types[start:stop],
+                'episode_infos':
+                {k: v[start:stop]
+                for (k,v) in self.episode_infos.items()}
             })
             start = stop
         return episodes
@@ -435,6 +439,7 @@ class EpisodeBatch(
                     shape (T,) containing the time step types for all
                     transitions in this batch.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -442,6 +447,10 @@ class EpisodeBatch(
                     non-flattened `episode_info` arrays.
 >>>>>>> 679bf7d... update algos and samplers
 >>>>>>> a1addcc... episode_info added to TimeStep
+=======
+                *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
+                    non-flattened `agent_info` arrays.
+>>>>>>> 49ac5da... update dtypes with episode_info
         """
         lengths = np.asarray([len(p['rewards']) for p in paths])
         if all(
@@ -855,8 +864,8 @@ class TimeStepBatch(
         step_types (numpy.ndarray): A numpy array of `StepType with shape (
             batch_size,) containing the time step types for all transitions in
             this batch.
-        episode_info (dict): A dict of episode-level information.
-            It contains information of the entire episode， which could be
+        episode_infos (dict): A dict of episode-level information.
+            It contains information of he entire episode， which could be
             needed to determine the first action (e.g. in the case of
             goal-conditioned or MTRL.)
 
@@ -1007,17 +1016,19 @@ class TimeStepBatch(
         # TODO: figure out if episode_info is batch or not
         # episode_info
         for key, val in episode_infos.items():
-            if (isinstance(val, dict)):
+            if not isinstance(val, (dict, np.ndarray)):
+                raise ValueError(
+                    'Each entry in episode_infos must be a numpy array or '
+                    'dictionary, but got key {} with value type {} instead.'
+                    'instead'.format(key, type(val)))
+
+            if (isinstance(val, np.ndarray)
+                    and val.shape[0] != inferred_batch_size):
                 raise ValueError(
                     'Each entry in episode_infos must have a batch '
                     'dimension of '
                     'length {}, but got key {} with batch size {} instead.'.
-                    format(inferred_batch_size, key, val.shape[0]))
-        # if not isinstance(episode_info, dict):
-        #     raise ValueError(
-        #         'episode_info must be a numpy array or dictionary, 
-        #         'but got value with type {} instead.'
-        #         'instead'.format((type(episode_info))))
+                    format(inferred_batch_size, key, val.shape[0]))            
 
         # episode_infos
         for key, val in episode_infos.items():
@@ -1157,6 +1168,13 @@ class TimeStepBatch(
                 step_types (numpy.ndarray): A numpy array of `StepType with
                         shape (batch_size,) containing the time step types for
                         all transitions in this batch.
+<<<<<<< HEAD
+=======
+                episode_infos (dict): A dict of episode-level information.
+                    It contains information of he entire episode， which could be
+                    needed to determine the first action (e.g. in the case of
+                    goal-conditioned or MTRL.)
+>>>>>>> 49ac5da... update dtypes with episode_info
         """
         samples = []
         for i in range(len(self.rewards)):
@@ -1230,6 +1248,13 @@ class TimeStepBatch(
                 * step_types (numpy.ndarray): A numpy array of `StepType with
                 shape (batch_size,) containing the time step types for all
                     transitions in this batch.
+<<<<<<< HEAD
+=======
+                * episode_infos (dict): The episode-level information.
+                    It contains information of he entire episode， which could be
+                    needed to determine the first action (e.g. in the case of
+                    goal-conditioned or MTRL.)
+>>>>>>> 49ac5da... update dtypes with episode_info
 
         Returns:
             TimeStepBatch: The concatenation of samples.
