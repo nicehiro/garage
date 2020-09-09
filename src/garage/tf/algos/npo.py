@@ -168,6 +168,7 @@ class NPO(RLAlgorithm):
         Args:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< 9c9c704d353b943e92a3e799258efdb0c2b32689
             trainer (Trainer): Experiment trainer, which provides services
 =======
@@ -179,6 +180,9 @@ class NPO(RLAlgorithm):
 =======
             runner (LocalRunner): Experiment runner, which provides services
 >>>>>>> 2bd4536... update algos and samplers
+=======
+            runner (LocalRunner): Experiment runner, which provides services
+>>>>>>> 679bf7d... update algos and samplers
                 such as snapshotting and sampler control.
 
         Returns:

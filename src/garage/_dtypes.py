@@ -979,7 +979,6 @@ class TimeStepBatch(
                     'dimension of '
                     'length {}, but got key {} with batch size {} instead.'.
                     format(inferred_batch_size, key, val.shape[0]))
-
         # episode_infos
         for key, val in episode_infos.items():
             if not isinstance(val, (dict, np.ndarray)):
