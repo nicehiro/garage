@@ -449,8 +449,12 @@ class EpisodeBatch(
 >>>>>>> a1addcc... episode_info added to TimeStep
 =======
                 *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
+<<<<<<< HEAD
                     non-flattened `agent_info` arrays.
 >>>>>>> 49ac5da... update dtypes with episode_info
+=======
+                    non-flattened `episode_info` arrays.
+>>>>>>> 2bd4536... update algos and samplers
         """
         lengths = np.asarray([len(p['rewards']) for p in paths])
         if all(
@@ -1013,8 +1017,7 @@ class TimeStepBatch(
                     'length {}, but got key {} with batch size {} instead.'.
                     format(inferred_batch_size, key, val.shape[0]))
         
-        # TODO: figure out if episode_info is batch or not
-        # episode_info
+        # episode_infos
         for key, val in episode_infos.items():
             if not isinstance(val, (dict, np.ndarray)):
                 raise ValueError(
@@ -1168,13 +1171,6 @@ class TimeStepBatch(
                 step_types (numpy.ndarray): A numpy array of `StepType with
                         shape (batch_size,) containing the time step types for
                         all transitions in this batch.
-<<<<<<< HEAD
-=======
-                episode_infos (dict): A dict of episode-level information.
-                    It contains information of he entire episode， which could be
-                    needed to determine the first action (e.g. in the case of
-                    goal-conditioned or MTRL.)
->>>>>>> 49ac5da... update dtypes with episode_info
         """
         samples = []
         for i in range(len(self.rewards)):
@@ -1248,13 +1244,6 @@ class TimeStepBatch(
                 * step_types (numpy.ndarray): A numpy array of `StepType with
                 shape (batch_size,) containing the time step types for all
                     transitions in this batch.
-<<<<<<< HEAD
-=======
-                * episode_infos (dict): The episode-level information.
-                    It contains information of he entire episode， which could be
-                    needed to determine the first action (e.g. in the case of
-                    goal-conditioned or MTRL.)
->>>>>>> 49ac5da... update dtypes with episode_info
 
         Returns:
             TimeStepBatch: The concatenation of samples.
