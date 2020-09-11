@@ -52,10 +52,14 @@ def eps_data():
     # episode_infos
     episode_infos = dict()
 <<<<<<< HEAD
+<<<<<<< HEAD
     episode_infos['task_one_hot'] = np.stack([[1, 1]] * len(lens))
 =======
 
 >>>>>>> e401070... update tests for dtypes
+=======
+    episode_infos['task_one_hot'] = np.stack([[1, 1]] * len(lens))
+>>>>>>> 9f455ed... update docs and tests
 
     return {
         'episode_infos': episode_infos,
@@ -69,9 +73,12 @@ def eps_data():
         'step_types': step_types,
         'lengths': lens,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         'episode_infos': episode_infos
 >>>>>>> e401070... update tests for dtypes
+=======
+>>>>>>> 9f455ed... update docs and tests
     }
 
 
@@ -472,9 +479,13 @@ def batch_data():
     #episode_infos
     episode_infos = dict()
 <<<<<<< HEAD
+<<<<<<< HEAD
     episode_infos['prev_action'] = act
 =======
 >>>>>>> e401070... update tests for dtypes
+=======
+    episode_infos['prev_action'] = act
+>>>>>>> 9f455ed... update docs and tests
 
     return {
         'episode_infos': episode_infos,
@@ -485,8 +496,7 @@ def batch_data():
         'rewards': rew,
         'env_infos': env_infos,
         'agent_infos': agent_infos,
-        'step_types': step_types,
-        'episode_infos': episode_infos,
+        'step_types': step_types
     }
 
 
@@ -501,7 +511,6 @@ def test_new_ts_batch(batch_data):
     assert s.env_infos is batch_data['env_infos']
     assert s.agent_infos is batch_data['agent_infos']
     assert s.step_types is batch_data['step_types']
-    assert s.episode_infos is batch_data['episode_infos']
 
 
 def test_invalid_inferred_batch_size(batch_data):
@@ -786,6 +795,7 @@ def test_terminals(batch_data):
 
 =======
 >>>>>>> e401070... update tests for dtypes
+
 
 def test_from_empty_time_step_list_batch(batch_data):
     with pytest.raises(ValueError, match='at least one dict'):

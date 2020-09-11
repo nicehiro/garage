@@ -22,7 +22,6 @@ class EpisodeBatch(
             'agent_infos',
             'step_types',
             'lengths',
-            'episode_infos',
         ])):
     # pylint: disable=missing-return-doc, missing-return-type-doc, missing-param-doc, missing-type-doc  # noqa: E501
     r"""A tuple representing a batch of whole episodes.
@@ -85,8 +84,6 @@ class EpisodeBatch(
         lengths (numpy.ndarray): An integer numpy array of shape :math:`(N,)`
             containing the length of each episode in this batch. This may be
             used to reconstruct the individual episodes.
-        episode_infos (dict): A dict of numpy arrays containing the episode-level
-            information of each episode.
 
     Raises:
         ValueError: If any of the above attributes do not conform to their
@@ -387,10 +384,7 @@ class EpisodeBatch(
                 {k: v[start:stop]
                  for (k, v) in self.agent_infos.items()},
                 'step_types':
-                self.step_types[start:stop],
-                'episode_infos':
-                {k: v[start:stop]
-                for (k,v) in self.episode_infos.items()}
+                self.step_types[start:stop]
             })
             start = stop
         return episodes
@@ -404,15 +398,7 @@ class EpisodeBatch(
                 this data was sampled.
             paths (list[dict[str, np.ndarray or dict[str, np.ndarray]]]): Keys:
                 *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
-<<<<<<< HEAD
                     non-flattened `episode_info` arrays, each of shape (T, S^*).
-=======
-<<<<<<< HEAD
-                    non-flattened `episode_info` arrays.
-=======
-                    non-flattened `episode_info` arrays, each of shape (T, S^*).
->>>>>>> 3832d44... update episode_info shape in docs
->>>>>>> a1addcc... episode_info added to TimeStep
                 * observations (np.ndarray): Non-flattened array of
                     observations. Typically has shape (T, S^*) (the unflattened
                     state space of the current environment). observations[i]
@@ -438,23 +424,6 @@ class EpisodeBatch(
                 * step_types (numpy.ndarray): A numpy array of `StepType with
                     shape (T,) containing the time step types for all
                     transitions in this batch.
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-                *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
-                    non-flattened `episode_info` arrays.
->>>>>>> 679bf7d... update algos and samplers
->>>>>>> a1addcc... episode_info added to TimeStep
-=======
-                *episode_infos (dict[str, np.ndarray]): Dictionary of stacked,
-<<<<<<< HEAD
-                    non-flattened `agent_info` arrays.
->>>>>>> 49ac5da... update dtypes with episode_info
-=======
-                    non-flattened `episode_info` arrays.
->>>>>>> 2bd4536... update algos and samplers
         """
         lengths = np.asarray([len(p['rewards']) for p in paths])
         if all(
@@ -739,8 +708,6 @@ class TimeStep(
         step_type (StepType): a :class:`~StepType` enum value. Can be one of
             :attribute:`~StepType.FIRST`, :attribute:`~StepType.MID`,
             :attribute:`~StepType.TERMINAL`, or :attribute:`~StepType.TIMEOUT`.
-        episode_info (dict): A dict of episode-level information.
-            It contains information of the entire episode.
 
     """
 
@@ -868,10 +835,6 @@ class TimeStepBatch(
         step_types (numpy.ndarray): A numpy array of `StepType with shape (
             batch_size,) containing the time step types for all transitions in
             this batch.
-        episode_infos (dict): A dict of episode-level information.
-            It contains information of he entire episode， which could be
-            needed to determine the first action (e.g. in the case of
-            goal-conditioned or MTRL.)
 
     Raises:
         ValueError: If any of the above attributes do not conform to their
@@ -1016,22 +979,6 @@ class TimeStepBatch(
                     'dimension of '
                     'length {}, but got key {} with batch size {} instead.'.
                     format(inferred_batch_size, key, val.shape[0]))
-        
-        # episode_infos
-        for key, val in episode_infos.items():
-            if not isinstance(val, (dict, np.ndarray)):
-                raise ValueError(
-                    'Each entry in episode_infos must be a numpy array or '
-                    'dictionary, but got key {} with value type {} instead.'
-                    'instead'.format(key, type(val)))
-
-            if (isinstance(val, np.ndarray)
-                    and val.shape[0] != inferred_batch_size):
-                raise ValueError(
-                    'Each entry in episode_infos must have a batch '
-                    'dimension of '
-                    'length {}, but got key {} with batch size {} instead.'.
-                    format(inferred_batch_size, key, val.shape[0]))            
 
         # episode_infos
         for key, val in episode_infos.items():
@@ -1053,7 +1000,6 @@ class TimeStepBatch(
                                observations, actions, rewards,
                                next_observations, env_infos, agent_infos,
                                step_types)
-
 
     @classmethod
     def concatenate(cls, *batches):
@@ -1129,8 +1075,7 @@ class TimeStepBatch(
                     k: np.asarray([v[i]])
                     for (k, v) in self.agent_infos.items()
                 },
-                step_types=np.asarray([self.step_types[i]], dtype=StepType)
-            )
+                step_types=np.asarray([self.step_types[i]], dtype=StepType))
             time_steps.append(time_step)
         return time_steps
 
