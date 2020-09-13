@@ -51,15 +51,7 @@ def eps_data():
 
     # episode_infos
     episode_infos = dict()
-<<<<<<< HEAD
-<<<<<<< HEAD
     episode_infos['task_one_hot'] = np.stack([[1, 1]] * len(lens))
-=======
-
->>>>>>> e401070... update tests for dtypes
-=======
-    episode_infos['task_one_hot'] = np.stack([[1, 1]] * len(lens))
->>>>>>> 9f455ed... update docs and tests
 
     return {
         'episode_infos': episode_infos,
@@ -72,13 +64,6 @@ def eps_data():
         'agent_infos': agent_infos,
         'step_types': step_types,
         'lengths': lens,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        'episode_infos': episode_infos
->>>>>>> e401070... update tests for dtypes
-=======
->>>>>>> 9f455ed... update docs and tests
     }
 
 
@@ -476,16 +461,9 @@ def batch_data():
     agent_infos['prev_action'] = act
     agent_infos['hidden'] = np.arange(batch_size)
 
-    #episode_infos
+    # episode_infos
     episode_infos = dict()
-<<<<<<< HEAD
-<<<<<<< HEAD
     episode_infos['prev_action'] = act
-=======
->>>>>>> e401070... update tests for dtypes
-=======
-    episode_infos['prev_action'] = act
->>>>>>> 9f455ed... update docs and tests
 
     return {
         'episode_infos': episode_infos,
@@ -774,8 +752,7 @@ def test_to_time_step_list_batch(batch_data):
             assert key in batch_data['episode_infos']
             assert np.array_equal(batch['episode_infos'][key],
                                   [batch_data['episode_infos'][key][i]])
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 def test_terminals(batch_data):
     s = TimeStepBatch(
@@ -790,11 +767,6 @@ def test_terminals(batch_data):
         episode_infos=batch_data['episode_infos'],
     )
     assert s.terminals.shape == s.rewards.shape
-=======
->>>>>>> a1addcc... episode_info added to TimeStep
-
-=======
->>>>>>> e401070... update tests for dtypes
 
 
 def test_from_empty_time_step_list_batch(batch_data):
