@@ -166,23 +166,7 @@ class NPO(RLAlgorithm):
         """Obtain samplers and start actual training for each epoch.
 
         Args:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< 9c9c704d353b943e92a3e799258efdb0c2b32689
             trainer (Trainer): Experiment trainer, which provides services
-=======
-            runner (LocalRunner): Experiment runner, which provides services
->>>>>>> episode_info added to TimeStep
-=======
-            runner (LocalRunner): Experiment runner, which provides services
->>>>>>> a1addcc... episode_info added to TimeStep
-=======
-            runner (LocalRunner): Experiment runner, which provides services
->>>>>>> 2bd4536... update algos and samplers
-=======
-            runner (LocalRunner): Experiment runner, which provides services
->>>>>>> 679bf7d... update algos and samplers
                 such as snapshotting and sampler control.
 
         Returns:
@@ -209,28 +193,10 @@ class NPO(RLAlgorithm):
             numpy.float64: Average return.
 
         """
-<<<<<<< HEAD
         # -- Stage: Calculate and pad baselines
         obs = [
             self._baseline.predict({'observations': obs})
             for obs in episodes.observations_list
-=======
-        # -- Stage: Calculate baseline
-        paths = [
-            dict(
-                observations=path['observations'],
-                actions=(
-                    self._env_spec.action_space.flatten_n(  # noqa: E126
-                        path['actions'])),
-                rewards=path['rewards'],
-                env_infos=path['env_infos'],
-                agent_infos=path['agent_infos'],
-                episode_infos=path['episode_infos'],
-                dones=np.array([
-                    step_type == StepType.TERMINAL
-                    for step_type in path['step_types']
-                ])) for path in paths
->>>>>>> 2bd4536... update algos and samplers
         ]
         baselines = episodes.pad_to_last(np.concatenate(obs))
 
